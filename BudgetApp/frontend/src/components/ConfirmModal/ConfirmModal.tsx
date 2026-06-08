@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import React, { type ReactNode } from "react";
 import styles from "./ConfirmModal.module.scss";
 
 interface ConfirmModalProps {
@@ -22,14 +22,32 @@ const ConfirmModal = ({
 }: ConfirmModalProps) => {
   if (!visible) return null;
 
+  const handleOverlayClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (event.target === event.currentTarget) {
+      onCancel();
+    }
+  };
+
+  const handleOverlayKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === "Escape") {
+      onCancel();
+    }
+  };
+
   return (
-    <div className={styles.modalOverlay} role="presentation" onClick={onCancel}>
+    <div
+      className={styles.modalOverlay}
+      role="button"
+      tabIndex={0}
+      onClick={handleOverlayClick}
+      onKeyDown={handleOverlayKeyDown}
+      aria-label="Zamknij okno"
+    >
       <div
         className={styles.modal}
         role="dialog"
         aria-modal="true"
         aria-labelledby="confirm-modal-title"
-        onClick={(event) => event.stopPropagation()}
       >
         <h3 id="confirm-modal-title">{title}</h3>
         <p>{message}</p>
