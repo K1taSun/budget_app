@@ -63,23 +63,32 @@
   gap: 1rem;
 }
 
-.groupItem {
+.groupItemContainer {
   background-color: color.scale($background-color, $lightness: 5%);
-  padding: 1.2rem;
   border-radius: 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  cursor: pointer;
   transition: background 0.3s, transform 0.3s;
-  font-size: 1.1rem;
-  font-weight: bold;
-  color: $text-color;
+  padding: 0.6rem 1.2rem;
 
   &:hover {
     background-color: rgba($primary-color, 0.1);
     transform: translateY(-2px);
   }
+}
+
+.groupItemButton {
+  flex: 1;
+  background: transparent;
+  border: none;
+  padding: 0.6rem 0;
+  text-align: left;
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: $text-color;
+  cursor: pointer;
+  font-family: $font-family;
 }
 
 .deleteButton {
@@ -99,7 +108,7 @@
 }
 
 .backButton {
-  background-color: gray;
+  background-color: #555555;
   color: white;
   border: none;
   padding: 0.6rem 1.2rem;
@@ -110,7 +119,7 @@
   transition: background 0.3s;
 
   &:hover {
-    background-color: darkgray;
+    background-color: #333333;
   }
 }
 

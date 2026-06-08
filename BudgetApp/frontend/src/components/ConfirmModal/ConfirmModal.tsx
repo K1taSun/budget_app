@@ -1,4 +1,4 @@
-import React, { type ReactNode } from "react";
+import { type ReactNode, useEffect } from "react";
 import styles from "./ConfirmModal.module.scss";
 
 interface ConfirmModalProps {
@@ -20,29 +20,34 @@ const ConfirmModal = ({
   onConfirm,
   onCancel,
 }: ConfirmModalProps) => {
+  useEffect(() => {
+    if (!visible) return;
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        onCancel();
+      }
+    };
+    globalThis.addEventListener("keydown", handleKeyDown);
+    return () => {
+      globalThis.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [visible, onCancel]);
+
   if (!visible) return null;
 
-  const handleOverlayClick = (event: React.MouseEvent<HTMLDialogElement>) => {
-    if (event.target === event.currentTarget) {
-      onCancel();
-    }
-  };
-
-  const handleOverlayKeyDown = (event: React.KeyboardEvent<HTMLDialogElement>) => {
-    if (event.key === "Escape") {
-      onCancel();
-    }
-  };
-
   return (
-    <dialog
-      className={styles.modalOverlay}
-      open
-      onClick={handleOverlayClick}
-      onKeyDown={handleOverlayKeyDown}
-      aria-label="Zamknij okno"
-    >
-      <div className={styles.modal}>
+    <>
+      <button
+        type="button"
+        className={styles.modalOverlay}
+        onClick={onCancel}
+        aria-label="Zamknij okno"
+      />
+      <dialog
+        className={styles.modal}
+        open
+        aria-labelledby="confirm-modal-title"
+      >
         <h3 id="confirm-modal-title">{title}</h3>
         <p>{message}</p>
         <div className={styles.actions}>
@@ -53,8 +58,8 @@ const ConfirmModal = ({
             {confirmLabel}
           </button>
         </div>
-      </div>
-    </dialog>
+      </dialog>
+    </>
   );
 };
 

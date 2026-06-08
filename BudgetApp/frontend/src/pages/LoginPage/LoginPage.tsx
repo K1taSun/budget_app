@@ -47,8 +47,9 @@ const LoginPage: React.FC = () => {
       <h2 className={styles.title}>Logowanie</h2>
       <form onSubmit={handleLogin} className={styles.form}>
         <div className={styles.formGroup}>
-          <label>Email:</label>
+          <label htmlFor="email-input">Email:</label>
           <input 
+            id="email-input"
             type="email" 
             value={email} 
             onChange={(e) => setEmail(e.target.value)} 
@@ -58,8 +59,9 @@ const LoginPage: React.FC = () => {
           {error && <ErrorMessage message={error} />}
         </div>
         <div className={styles.formGroup}>
-          <label>Hasło:</label>
+          <label htmlFor="password-input">Hasło:</label>
           <input 
+            id="password-input"
             type="password" 
             value={password} 
             onChange={(e) => setPassword(e.target.value)} 
