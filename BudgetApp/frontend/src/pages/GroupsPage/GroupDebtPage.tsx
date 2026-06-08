@@ -12,7 +12,7 @@ const GroupDebtsPage = () => {
   const [ownerId, setOwnerId] = useState<Id | null>(null);
   const [errorMessage, setErrorMessage] = useState("");
   const [debtToDelete, setDebtToDelete] = useState<GroupDebt | null>(null);
-  const currentUserId = user?.id !== undefined ? String(user.id) : "";
+  const currentUserId = user?.id === undefined ? "" : String(user.id);
 
   const getErrorMessage = (error: unknown, fallback: string) => {
     if (error instanceof Error && error.message.trim()) {
