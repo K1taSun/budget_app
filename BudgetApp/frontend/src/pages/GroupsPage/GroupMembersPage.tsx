@@ -4,6 +4,13 @@ import { useAuth } from "../../context/AuthContext";
 import styles from "./Group.module.scss";
 import AddGroupTransaction from "./AddGroupTransaction";
 import ConfirmModal from "../../components/ConfirmModal/ConfirmModal";
+import {
+  canManageDebt,
+  canMarkDebtAsPaid,
+  canConfirmDebtPayment,
+  getDebtStatusLabel,
+  getDebtStatusClass,
+} from "./groupHelpers";
 
 interface Group {
   id: number | string;
@@ -231,30 +238,6 @@ const GroupMembersPage = ({ group, onBack }: Props) => {
     }
   };
 
-  const canManageDebt = (debt: GroupDebt) =>
-    isGroupOwner ||
-    String(debt.debtor.id) === currentUserId ||
-    String(debt.creditor.id) === currentUserId;
-
-  const canMarkDebtAsPaid = (debt: GroupDebt) =>
-    String(debt.debtor.id) === currentUserId && !debt.paidByDebtor;
-
-  const canConfirmDebtPayment = (debt: GroupDebt) =>
-    String(debt.creditor.id) === currentUserId &&
-    debt.paidByDebtor &&
-    !debt.confirmedByCreditor;
-
-  const getDebtStatusLabel = (debt: GroupDebt) => {
-    if (debt.confirmedByCreditor) return "Spłata potwierdzona";
-    if (debt.paidByDebtor) return "Oczekuje na potwierdzenie";
-    return "Nieopłacony";
-  };
-
-  const getDebtStatusClass = (debt: GroupDebt) => {
-    if (debt.confirmedByCreditor) return styles.statusPaid;
-    if (debt.paidByDebtor) return styles.statusPending;
-    return styles.statusOpen;
-  };
 
   const handleMarkDebtAsPaid = async (debtId: number | string) => {
     try {
@@ -414,10 +397,10 @@ const GroupMembersPage = ({ group, onBack }: Props) => {
                   {debt.creditor.email}
                 </strong>{" "}
                 {debt.amount.toFixed(2)} zł za <strong>{debt.title}</strong>
-                <span className={`${styles.statusBadge} ${getDebtStatusClass(debt)}`}>
+                <span className={`${styles.statusBadge} ${getDebtStatusClass(debt, styles)}`}>
                   {getDebtStatusLabel(debt)}
                 </span>
-                {canMarkDebtAsPaid(debt) && (
+                {canMarkDebtAsPaid(debt, currentUserId) && (
                   <button
                     type="button"
                     className={styles.button}
@@ -426,7 +409,7 @@ const GroupMembersPage = ({ group, onBack }: Props) => {
                     Oznacz jako opłacony
                   </button>
                 )}
-                {canConfirmDebtPayment(debt) && (
+                {canConfirmDebtPayment(debt, currentUserId) && (
                   <button
                     type="button"
                     className={styles.button}
@@ -435,7 +418,7 @@ const GroupMembersPage = ({ group, onBack }: Props) => {
                     Potwierdź spłatę
                   </button>
                 )}
-                {canManageDebt(debt) && (
+                {canManageDebt(debt, isGroupOwner, currentUserId) && (
                   <button
                     type="button"
                     className={styles.deleteButton}
