@@ -19,8 +19,14 @@ const LoginPage: React.FC = () => {
     setError('');
     try {
       const response = await authApi.login({ email, password });
-      login(response.data.token);
-      navigate('/transactions');
+      const token = response.data.token;
+      const jwtPattern = /^[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+$/;
+      if (typeof token === 'string' && jwtPattern.test(token)) {
+        login(token);
+        navigate('/transactions');
+      } else {
+        setError('Otrzymano nieprawidłowy format tokena.');
+      }
     } catch (error) {
       if (error instanceof AxiosError) {
         if (error.response?.data) {

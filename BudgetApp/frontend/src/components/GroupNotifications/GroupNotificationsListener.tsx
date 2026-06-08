@@ -25,7 +25,8 @@ const GroupNotificationsListener = () => {
     if (!isAuthenticated) return;
 
     const token = localStorage.getItem("accessToken");
-    if (!token) return;
+    const jwtPattern = /^[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+$/;
+    if (!token || !jwtPattern.test(token)) return;
 
     const socket = new WebSocket(getWebSocketUrl(token));
 

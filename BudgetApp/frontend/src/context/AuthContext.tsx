@@ -76,6 +76,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   }, []);
 
   const login = useCallback((token: string) => {
+    const jwtPattern = /^[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+$/;
+    if (!jwtPattern.test(token)) {
+      console.error("Próba zapisu nieprawidłowego tokena do pamięci przeglądarki");
+      return;
+    }
     const parsedUser = parseJwt(token);
     if (!parsedUser) {
       console.error("Nie udało się sparsować użytkownika z tokena");
