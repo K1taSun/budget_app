@@ -50,6 +50,11 @@ const GroupMembersPage = ({ group, onBack }: Props) => {
     return fallback;
   };
 
+  const sanitizeLog = (val: unknown): string => {
+    const str = val instanceof Error ? val.message : String(val);
+    return str.replace(/[\r\n]/g, " ");
+  };
+
   const loadMembersData = useCallback(async () => {
     return Promise.allSettled([
       groupsApi.getGroupMembers(group.id),
@@ -81,7 +86,7 @@ const GroupMembersPage = ({ group, onBack }: Props) => {
           );
         }
       } else {
-        console.error("Błąd pobierania członków grupy:", membersResult.reason);
+        console.error("Błąd pobierania członków grupy:", sanitizeLog(membersResult.reason));
         setMembers([]);
         setErrorMessage((current) =>
           current || "Nie udało się pobrać członków grupy."
@@ -91,7 +96,7 @@ const GroupMembersPage = ({ group, onBack }: Props) => {
       if (debtsResult.status === "fulfilled") {
         setDebts(debtsResult.value);
       } else {
-        console.error("Błąd pobierania długów grupy:", debtsResult.reason);
+        console.error("Błąd pobierania długów grupy:", sanitizeLog(debtsResult.reason));
         setDebts([]);
         setErrorMessage((current) =>
           current || "Nie udało się pobrać długów grupy."
@@ -141,7 +146,7 @@ const GroupMembersPage = ({ group, onBack }: Props) => {
       setNewMemberEmail("");
       refreshMembers();
     } catch (error: unknown) {
-      console.error("Błąd dodawania członka:", error);
+      console.error("Błąd dodawania członka:", sanitizeLog(error));
       setAddMemberError(getErrorMessage(error, "Nie udało się dodać członka."));
     }
   };
@@ -164,7 +169,7 @@ const GroupMembersPage = ({ group, onBack }: Props) => {
         refreshMembers();
       }
     } catch (error: unknown) {
-      console.error("Błąd usuwania członka:", error);
+      console.error("Błąd usuwania członka:", sanitizeLog(error));
       setErrorMessage(
         getErrorMessage(error, "Nie udało się usunąć członka grupy.")
       );
@@ -207,7 +212,7 @@ const GroupMembersPage = ({ group, onBack }: Props) => {
       setDebtAmount("");
       refreshMembers();
     } catch (error: unknown) {
-      console.error("Błąd dodawania długu:", error);
+      console.error("Błąd dodawania długu:", sanitizeLog(error));
       setDebtFormError(getErrorMessage(error, "Nie udało się dodać długu."));
     }
   };
@@ -221,7 +226,7 @@ const GroupMembersPage = ({ group, onBack }: Props) => {
       setDebtToDelete(null);
       refreshMembers();
     } catch (error: unknown) {
-      console.error("Błąd usuwania długu:", error);
+      console.error("Błąd usuwania długu:", sanitizeLog(error));
       setErrorMessage(getErrorMessage(error, "Nie udało się usunąć długu."));
     }
   };
@@ -251,7 +256,7 @@ const GroupMembersPage = ({ group, onBack }: Props) => {
       await groupsApi.markDebtAsPaid(debtId);
       refreshMembers();
     } catch (error: unknown) {
-      console.error("Błąd oznaczania długu jako opłaconego:", error);
+      console.error("Błąd oznaczania długu jako opłaconego:", sanitizeLog(error));
       setErrorMessage(
         getErrorMessage(error, "Nie udało się oznaczyć długu jako opłaconego.")
       );
@@ -264,7 +269,7 @@ const GroupMembersPage = ({ group, onBack }: Props) => {
       await groupsApi.confirmDebtPayment(debtId);
       refreshMembers();
     } catch (error: unknown) {
-      console.error("Błąd potwierdzania spłaty długu:", error);
+      console.error("Błąd potwierdzania spłaty długu:", sanitizeLog(error));
       setErrorMessage(
         getErrorMessage(error, "Nie udało się potwierdzić spłaty długu.")
       );
