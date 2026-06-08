@@ -119,11 +119,11 @@ table {
 
 .cancel {
   @extend .button;
-  background-color: gray;
+  background-color: #555555;
   color: white;
 
   &:hover {
-    background-color: darkgray;
+    background-color: #333333;
   }
 }
 

@@ -9,6 +9,10 @@ interface TransactionsResponse {
   transactions: Transaction[];
 }
 
+const getTransactionTypeText = (type: string) => {
+  return type === "INCOME" ? "Przychód" : "Wydatek";
+};
+
 const TransactionList = () => {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -84,7 +88,7 @@ const TransactionList = () => {
     const errors: { [key: string]: string } = {};
     const { amount, type, tags, notes } = editValues;
 
-    if (!amount || parseFloat(amount.toString()) <= 0) {
+    if (!amount || Number.parseFloat(amount.toString()) <= 0) {
       errors.amount = "Kwota musi być większa od zera.";
     }
 
@@ -216,10 +220,8 @@ const TransactionList = () => {
                       <p className={styles.error}>{editErrors.type}</p>
                     )}
                   </>
-                ) : transaction.type === "INCOME" ? (
-                  "Przychód"
                 ) : (
-                  "Wydatek"
+                  getTransactionTypeText(transaction.type)
                 )}
               </td>
               <td>
