@@ -2,7 +2,7 @@
 import axios from "axios";
 
 const axiosClient = axios.create({
-  baseURL: "http://localhost:8080/api", 
+  baseURL: import.meta.env.VITE_API_URL || `${window.location.protocol}//${window.location.hostname}:8080/api`,
   // Ustaw tu bazowy adres backendu (np. /api) jeśli Spring wystawia taką ścieżkę
 });
 

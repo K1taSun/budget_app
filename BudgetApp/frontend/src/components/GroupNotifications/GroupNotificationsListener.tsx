@@ -15,7 +15,8 @@ interface GroupNotification {
 
 const getWebSocketUrl = (token: string) => {
   const protocol = globalThis.location.protocol === "https:" ? "wss" : "ws";
-  return `${protocol}://localhost:8080/ws/group-notifications?token=${encodeURIComponent(token)}`;
+  const baseUrl = import.meta.env.VITE_WS_URL || `${protocol}://${globalThis.location.hostname}:8080/ws/group-notifications`;
+  return `${baseUrl}?token=${encodeURIComponent(token)}`;
 };
 
 const GroupNotificationsListener = () => {
