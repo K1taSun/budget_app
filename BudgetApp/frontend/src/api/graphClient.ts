@@ -16,7 +16,7 @@ const graphqlClient = async <T = unknown>(
   const token = localStorage.getItem("accessToken");
 
   const response = await axios.post<GraphQLResponse<T>>(
-    import.meta.env.VITE_GRAPHQL_URL || `${window.location.protocol}//${window.location.hostname}:8080/graphql`,
+    import.meta.env.VITE_GRAPHQL_URL || `${globalThis.location.protocol}//${globalThis.location.hostname}:8080/graphql`,
     { query, variables },
     {
       headers: {
